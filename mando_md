@@ -1,0 +1,26 @@
+# clase 1
+
+## comandos basicos terminales
+
+- `ls `: listado de archivos de una carpeta:
+- `ls _all `: listado de archivos de una carpeta:
+- `comandos ` :basicos terminales clear:navegar entre directorios
+- `cd [ carpeta]`:navegar entre directorios(cd nombre carpeta).
+- `rmdir [ ARCHIVO]`: eliminar carpetas comandos
+  basicos.
+
+- `rm [ ARCHIVO]`:para remover un archivo normal.
+- `mkdir`:para crearun directorio (mkdir nombre de la carpeta ).
+- `ctrl+shift+Ñ`: abrir la terminal desde visual
+- `touch[ ARCHIVO] `: para crear archivo
+- `ctrl+s`: guardar el archivo
+- `git init`: iniciar git
+- `git add .`: pedirle a gitt que lo guarde todo
+- `git  commit -m .`: para guardar una version
+
+        # comandos de git
+
+         - git init
+         - git add .
+         - git commit -m [CREATE]
+         - git push

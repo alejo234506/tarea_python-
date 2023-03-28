@@ -21,10 +21,9 @@ class personas(SERvivo) :
         print(f"{self.nombre} esta bob constructor ")
     
     def sonido(self):
-        print(f"{self.nombre}  esta llorando  ")
+        print(f"{self.nombre}  esta   FREGADO ")
         
-    
-class gato(SERvivo) :
+class  gato(SERvivo) :
     def sentidos(self):
         print(self.sentidos_lista)
         
@@ -38,7 +37,7 @@ class perro(SERvivo) :
         print(self.sentidos_lista)
         
     def movimiento(self):
-        print(f"{self.nombre} esta  mordiendo a otro perro ")
+        print(f"{self.nombre} esta  mordiendo a otro  ")
     
     def sonido(self):
         print(f"{self.nombre}  esta ladrando   ")
@@ -49,12 +48,12 @@ p1.sentidos()
 p1.movimiento()
 p1.sonido()
 
-r=gato("kembal walker")
+r=personas("kembal " )
 r.sentidos()
 r.movimiento()
 r.sonido()
 
-p=perro ("kembal walker")
+p=personas("kembIN")
 p.sentidos()
 p.movimiento()
 p.sonido()
