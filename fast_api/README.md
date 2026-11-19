@@ -23,7 +23,7 @@ uvicorn entrypoint:app --reload
 - API: http://127.0.0.1:8000
 - Documentación interactiva para probar todo: http://127.0.0.1:8000/docs
 
-El nombre y la versión del servidor salen del archivo `.env` de la carpeta principal (`NAME` y `VERSION`).
+El nombre y la versión del servidor salen del archivo `.env` de la carpeta principal (`NAME` y `VERSION`). Ese archivo no se sube al repositorio: cópialo desde `.env.example` (`cp ../.env.example ../.env`).
 
 ## Métodos HTTP
 

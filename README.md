@@ -2,7 +2,8 @@
 
 Ejercicios de Python: funciones, listas, clases, herencia, una biblioteca en consola y una API con FastAPI.
 
-> En Windows usa `py` (o `python` si lo tienes configurado).
+> Requiere Python 3.10 o superior. En Windows usa `py` (o `python` si lo tienes configurado).
+> Los ejercicios de consola solo usan la librería estándar; únicamente la API necesita instalar dependencias.
 
 | Archivo | Tema | Cómo ejecutarlo |
 |--|--|--|
@@ -26,11 +27,17 @@ Los archivos de `biblioteca-/` trabajan juntos:
 - `biblioteca_remover.py`: eliminar un usuario (pide confirmación).
 
 ## API con FastAPI
+La API lee `NAME` y `VERSION` de un archivo `.env` en la carpeta principal. Créalo a partir de la plantilla (si no existe, usa valores por defecto):
+
+```bash
+cp .env.example .env
+```
+
 ```bash
 cd fast_api
 py -m venv venv
 source venv/Scripts/activate      # Git Bash  (PowerShell: venv\Scripts\Activate.ps1)
-pip install -r requirements.txt
+pip install -r requirements.txt   # o desde la raíz: pip install -r requirements.txt
 uvicorn entrypoint:app --reload
 ```
 Abre http://127.0.0.1:8000/docs para probar todas las rutas desde el navegador.

@@ -3,3 +3,6 @@ __pycache__/
 venv/
 .venv/
 biblioteca-/biblioteca.json
+
+# Variables de entorno locales (usa .env.example como plantilla)
+.env

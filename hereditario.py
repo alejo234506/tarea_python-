@@ -4,41 +4,41 @@
 class SerVivo:
     sentidos_lista = ["olfato", "vista", "tacto", "gusto", "oído"]
 
-    def __init__(self, nombre):
+    def __init__(self, nombre: str) -> None:
         self.nombre = nombre
 
-    def sentidos(self):
+    def sentidos(self) -> None:
         print(f"{self.nombre} tiene estos sentidos: {', '.join(self.sentidos_lista)}")
 
-    def movimiento(self):
+    def movimiento(self) -> None:
         print(f"{self.nombre} se está moviendo")
 
-    def sonido(self):
+    def sonido(self) -> None:
         print(f"{self.nombre} está haciendo un sonido")
 
 
 # Las clases hijas heredan sentidos() tal cual y solo cambian lo que es distinto
 class Persona(SerVivo):
-    def movimiento(self):
+    def movimiento(self) -> None:
         print(f"{self.nombre} está construyendo como Bob el constructor")
 
-    def sonido(self):
+    def sonido(self) -> None:
         print(f"{self.nombre} está hablando")
 
 
 class Gato(SerVivo):
-    def movimiento(self):
+    def movimiento(self) -> None:
         print(f"{self.nombre} está construyendo una arena de golf")
 
-    def sonido(self):
+    def sonido(self) -> None:
         print(f"{self.nombre} está maullando")
 
 
 class Perro(SerVivo):
-    def movimiento(self):
+    def movimiento(self) -> None:
         print(f"{self.nombre} está mordiendo a otro")
 
-    def sonido(self):
+    def sonido(self) -> None:
         print(f"{self.nombre} está ladrando")
 
 

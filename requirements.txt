@@ -1,0 +1,2 @@
+# Dependencias del proyecto (solo las usa la API de fast_api/)
+-r fast_api/requirements.txt
