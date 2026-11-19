@@ -1,197 +1,155 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+"""API de la biblioteca STEAM hecha con FastAPI.
+
+Ejecutar (desde la carpeta fast_api):
+    uvicorn entrypoint:app --reload
+Documentación interactiva: http://127.0.0.1:8000/docs
+"""
+import os
+from pathlib import Path
+from typing import Literal
+
 from dotenv import load_dotenv
-import os 
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel, Field
 
-# cargamos el entorno virtual
-NAME = os.getenv("NAME")
-VERSION = os.getenv("VERSION")
-print(NAME,VERSION)
+# Cargamos las variables del archivo .env (está en la carpeta principal del proyecto)
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+NAME = os.getenv("NAME", "biblioteca STEAM")
+VERSION = os.getenv("VERSION", "v0.1.0")
 
-servidor = FastAPI(
-    title=NAME,
-    version=VERSION
-)
+app = FastAPI(title=NAME, version=VERSION)
 
 
+# ============================== Modelos ==============================
+class Libro(BaseModel):
+    nombre: str = Field(min_length=1)
+    fecha: str = Field(examples=["13/03/2023"])
+    estado: Literal["prestado", "devuelto"] = "prestado"
 
 
-
-#registramos una funcion en mi app o en una ruta (endpoint)
-# '/' ruta raiz 
-# solo podemos tener una funcion por verbo en una ruta 
-
-
-
+class Persona(BaseModel):
+    id: str = Field(min_length=1)
+    nombre: str = Field(min_length=1)
+    edad: int = Field(ge=0, le=120)
+    libros: list[Libro] = []
 
 
+class PersonaModificar(BaseModel):
+    """Para el PUT: solo se cambian los campos que se envían."""
+    nombre: str | None = Field(default=None, min_length=1)
+    edad: int | None = Field(default=None, ge=0, le=120)
 
 
-# @app.get("/corre/{nombre}")
-# def Dios (nombre):
-#     return  f"corre por que si no mueres  {nombre}"
+# ============================== Datos ==============================
+# La biblioteca vive en memoria: un diccionario {id: Persona}
+biblioteca: dict[str, Persona] = {
+    "1": Persona(id="1", nombre="alejandro", edad=16, libros=[
+        Libro(nombre="5am", fecha="13/03/2023"),
+        Libro(nombre="100 años de soledad", fecha="13/05/2023"),
+    ]),
+    "2": Persona(id="2", nombre="valery", edad=17, libros=[
+        Libro(nombre="hábitos de la vida", fecha="14/03/2023"),
+        Libro(nombre="poesía y mitos", fecha="13/05/2023"),
+    ]),
+}
 
 
+def obtener_persona(id: str) -> Persona:
+    persona = biblioteca.get(id)
+    if persona is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"persona {id} no encontrada")
+    return persona
 
 
-# @app.get("/activo/{nombre}")
-# def reniga(nombre):
-#     return f"estas modo activo, por eso dame comida  {nombre} "
+# ============================== Rutas ==============================
+@app.get("/")
+def inicio():
+    return {"titulo": NAME, "version": VERSION, "documentacion": "/docs"}
 
 
-# @app.get("/me_caes_bien/{nombre}")
-# def melo (nombre):
-#     return f"estas re nea {nombre}"
-
-
-# @app.get("/g/{nombre}")
-# def hambre(nombre):
-#     return f"dame comida {nombre}"
-
-# @app.get("/hola/{nombre}/{edad}")
-# def hola(nombre:str,edad:int):
-#     if  edad<18:
-#         return f"hola {nombre} , {edad} eres menor de edad "
-#     else :
-#         return f"hola {nombre} , {edad} eres mayor de edad  "
-
-# @app.get("/cuadrado/{lado}")
-# def hola(lado:int):
-#     z = lado * lado
-#     return f"que mas el valor de tu cuadrado es {z}"
-# @app.get("/{id}")
-# def usuario(id:str):
-#     return biblioteca[id]
-
-# @app.get("/{id}/{id_libro}")
-# def usuario(id :str,id_libro:str):
-    
-#     return biblioteca [id]["libros"][id_libro]  
-
- 
-biblioteca = []
-     
-#<!-- "1":{
-#         "nombre":"alejandro ",
-#         "edad":"16",
-#         "libros":{
-#         "1":{
-#             "libro":"5am",
-#             "fecha":"13/3/2023",
-#             "estado":"prestado"
-#         },
-#         "2":{
-#             "libro":"100 años de soledad",
-#             "fecha":"13/5/2023",
-#             "estado":"prestado"
-#         },
-#         }
-        
-#     },
-#  >   "2":{
-#         "nombre":"valery",
-#         "edad":"17",
-#         "libros":{
-            
-#             "1": {
-#               "libro":"habtios de la vida",
-#               "fecha":"14/3/2023",
-#               "estado":"prestado"
-#             },
-#             "2" :{
-#             "libro":"poesia y mitos",
-#             "fecha":"13/5/2023",
-#             "estado":"prestado"
-#             },
-#         }
-            
-    #     } --]
-# @app.get("/")
-# def hello_world_check():
-#     return{
-#         "titulo":"biblioteca STEAM",
-#         "ver":"v0.0.1"
-#     }
-    
+# ----- CRUD de personas -----
 @app.get("/personas")
-def personas_all():
-    return biblioteca 
-
-# @app.get("/personas/{id}")
-# def hello_world_check(id:str):
-#     return biblioteca[id]
-
-class personaBiblioteca(BaseModel):
-     id:str
-     nombre:str
-     edad:int
-     libros:dict
-@servidor.post("/personas")
-def personas_add(request:personaBiblioteca):
-    biblioteca.update(request)
-    return request 
-
-class personabiblioteca(BaseModel):
-     id:str
-     nombre:str
-     edad:int
-     libros:dict
-@servidor.post("/personas")
-def personas_add(request:personaBiblioteca):
-    biblioteca.update(request)
-    return request
-
-class PersonaModify(BaseModel):
-     id:str
-     nombre:str
-     edad:int
-     libros:dict
-@servidor.put("/personas")
-def personas_modify(request:PersonaModify):
-    for i in biblioteca:
-        if i.id==id:
-            i.nombre=request.nombre
-            i.edad=request.edad
-            return i
-    return {"error":"persona no encontrada"}
+def personas_todas() -> list[Persona]:
+    return list(biblioteca.values())
 
 
-@servidor.delete("/personas/{id}")
-def personas_delete(id:str):
-    for i in biblioteca:
-        print(i)
-        if i.id==id:
-         print(i.id)
- 
-
-@servidor.get("/")
-def suma(a:float,b:float) -> float:
-    try:
-      return(a/b)
-    except ZeroDivisionError:
-        return("no se puede dividir entre cero ")
-    except TypeError:
-        return("no se puede dividir entre cero ")
-    except exception:
-        return("hubo otro error")
-    
-
-    
+@app.get("/personas/{id}")
+def persona_una(id: str) -> Persona:
+    return obtener_persona(id)
 
 
-    
+@app.post("/personas", status_code=status.HTTP_201_CREATED)
+def personas_agregar(persona: Persona) -> Persona:
+    if persona.id in biblioteca:
+        raise HTTPException(status.HTTP_409_CONFLICT, f"ya existe una persona con id {persona.id}")
+    biblioteca[persona.id] = persona
+    return persona
 
 
+@app.put("/personas/{id}")
+def personas_modificar(id: str, cambios: PersonaModificar) -> Persona:
+    persona = obtener_persona(id)
+    if cambios.nombre is not None:
+        persona.nombre = cambios.nombre
+    if cambios.edad is not None:
+        persona.edad = cambios.edad
+    return persona
 
 
+@app.delete("/personas/{id}")
+def personas_eliminar(id: str):
+    persona = obtener_persona(id)
+    del biblioteca[id]
+    return {"mensaje": f"{persona.nombre} fue eliminado(a) de la biblioteca"}
 
 
-
-             
-
-
-
-
+# ----- Libros de una persona -----
+@app.get("/personas/{id}/libros")
+def libros_de_persona(id: str) -> list[Libro]:
+    return obtener_persona(id).libros
 
 
-     
+@app.get("/personas/{id}/libros/{numero}")
+def libro_de_persona(id: str, numero: int) -> Libro:
+    """numero empieza en 1 (el primer libro es el 1)."""
+    libros = obtener_persona(id).libros
+    if not 1 <= numero <= len(libros):
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"la persona {id} no tiene el libro {numero}")
+    return libros[numero - 1]
+
+
+@app.post("/personas/{id}/libros", status_code=status.HTTP_201_CREATED)
+def prestar_libro(id: str, libro: Libro) -> Persona:
+    persona = obtener_persona(id)
+    persona.libros.append(libro)
+    return persona
+
+
+@app.put("/personas/{id}/libros/{numero}/devolver")
+def devolver_libro(id: str, numero: int) -> Libro:
+    libro = libro_de_persona(id, numero)
+    if libro.estado == "devuelto":
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "ese libro ya fue devuelto")
+    libro.estado = "devuelto"
+    return libro
+
+
+# ----- Rutas de práctica -----
+@app.get("/dividir")
+def dividir(a: float, b: float):
+    """Ejemplo: /dividir?a=10&b=2"""
+    if b == 0:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "no se puede dividir entre cero")
+    return {"a": a, "b": b, "resultado": a / b}
+
+
+@app.get("/hola/{nombre}/{edad}")
+def hola(nombre: str, edad: int):
+    if edad < 18:
+        return {"mensaje": f"hola {nombre}, con {edad} años eres menor de edad"}
+    return {"mensaje": f"hola {nombre}, con {edad} años eres mayor de edad"}
+
+
+@app.get("/cuadrado/{lado}")
+def cuadrado(lado: float):
+    return {"lado": lado, "area": lado * lado}

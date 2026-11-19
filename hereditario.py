@@ -1,60 +1,51 @@
-class SERvivo():
-    sentidos_lista=["olfato","vista","tacto","gusto","oido"]
-    
-    def __init__(self,nombre) :
-        self.nombre=nombre 
-        
+"""Herencia: Persona, Gato y Perro heredan de SerVivo y cambian su comportamiento."""
+
+
+class SerVivo:
+    sentidos_lista = ["olfato", "vista", "tacto", "gusto", "oído"]
+
+    def __init__(self, nombre):
+        self.nombre = nombre
+
     def sentidos(self):
-        print(self.sentidos_lista)
-        
+        print(f"{self.nombre} tiene estos sentidos: {', '.join(self.sentidos_lista)}")
+
     def movimiento(self):
-        print(f"{self.nombre} se esta moviendo  ")
-    
+        print(f"{self.nombre} se está moviendo")
+
     def sonido(self):
-        print(f"{self.nombre}  esta haciendo un sonido ")
-        
-class personas(SERvivo) :
-    def sentidos(self):
-        print(self.sentidos_lista)
-        
+        print(f"{self.nombre} está haciendo un sonido")
+
+
+# Las clases hijas heredan sentidos() tal cual y solo cambian lo que es distinto
+class Persona(SerVivo):
     def movimiento(self):
-        print(f"{self.nombre} esta bob constructor ")
-    
+        print(f"{self.nombre} está construyendo como Bob el constructor")
+
     def sonido(self):
-        print(f"{self.nombre}  esta   FREGADO ")
-        
-class  gato(SERvivo) :
-    def sentidos(self):
-        print(self.sentidos_lista)
-        
+        print(f"{self.nombre} está hablando")
+
+
+class Gato(SerVivo):
     def movimiento(self):
-        print(f"{self.nombre} esta contrullendo una arena de golf  ")
-    
+        print(f"{self.nombre} está construyendo una arena de golf")
+
     def sonido(self):
-        print(f"{self.nombre}  esta maullando  ")
-class perro(SERvivo) :
-    def sentidos(self):
-        print(self.sentidos_lista)
-        
+        print(f"{self.nombre} está maullando")
+
+
+class Perro(SerVivo):
     def movimiento(self):
-        print(f"{self.nombre} esta  mordiendo a otro  ")
-    
+        print(f"{self.nombre} está mordiendo a otro")
+
     def sonido(self):
-        print(f"{self.nombre}  esta ladrando   ")
+        print(f"{self.nombre} está ladrando")
 
 
-p1=personas("kembal walker")
-p1.sentidos()
-p1.movimiento()
-p1.sonido()
-
-r=personas("kembal " )
-r.sentidos()
-r.movimiento()
-r.sonido()
-
-p=personas("kembIN")
-p.sentidos()
-p.movimiento()
-p.sonido()
-
+if __name__ == "__main__":
+    seres = [Persona("Kemba Walker"), Gato("Michi"), Perro("Firulais")]
+    for ser in seres:
+        ser.sentidos()
+        ser.movimiento()
+        ser.sonido()
+        print("-" * 40)

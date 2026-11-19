@@ -1,39 +1,80 @@
-# FastAPI
-## creacion del entorno virtual
-1. instalar la libreria del entorno virtual ````pip install virtualenv````
-2. creacion de entorno virtual ````python -m virtualenv [NOMBRE]````
-3. verificacmos el python general````pip freeze````
-4. Entro a entorno virtual (EN WINDOWS desde GIT-BASH) ````source venv/Scripts/activate```` y sale el nombre de mi entorno virtual en mi linea de comandos.
-5. para ingresar a la pagina es  ````uvicorn entrypoint:app --reload```` con esto te sale en el servidor 
+# FastAPI – Biblioteca STEAM
 
-## INSTALAR FastAPI
-1. instalacion de FastAPI ````pip install fastapi uvicorn````
-2. creamos un nuevo archivo llamado ````entrypoint.py````y con python
-   from fastapi from FastAPI
+## Creación del entorno virtual
+1. Crear el entorno virtual: `py -m venv venv`
+2. Entrar al entorno virtual:
+   - Git Bash: `source venv/Scripts/activate`
+   - PowerShell: `venv\Scripts\Activate.ps1`
 
-3. corremos nuestro servidor ```` uvicorn entrypoint:app --reload````
+   Sale `(venv)` al inicio de la línea de comandos.
+3. Ver lo que hay instalado: `pip freeze`
 
+## Instalar FastAPI
+```bash
+pip install -r requirements.txt
+```
+Esto instala `fastapi`, `uvicorn` y `python-dotenv`.
 
-##  Metodos HTTP 
+## Correr el servidor
+Desde la carpeta `fast_api`:
+```bash
+uvicorn entrypoint:app --reload
+```
+- API: http://127.0.0.1:8000
+- Documentación interactiva para probar todo: http://127.0.0.1:8000/docs
 
+El nombre y la versión del servidor salen del archivo `.env` de la carpeta principal (`NAME` y `VERSION`).
 
-|metodo|accion DB|uso|
+## Métodos HTTP
+
+| Método | Acción DB | Uso |
 |--|--|--|
-|POST|create|crear un registro en nuestroi backend o base|
-|GET|Read|acceder,recuperar o leer informacion |
-|PUT|Update|actualizar o editar  un registro nuevo  |
-|DELETE|Delete|Eliminar un registro de nuestro backend |
+| POST | Create | crear un registro en nuestro backend o base |
+| GET | Read | acceder, recuperar o leer información |
+| PUT | Update | actualizar o editar un registro |
+| DELETE | Delete | eliminar un registro de nuestro backend |
 
+## Rutas de la API
 
-## CREACION DE PRIMERA RUTA 
+| Método | Ruta | Qué hace |
+|--|--|--|
+| GET | `/` | información del servidor |
+| GET | `/personas` | lista todas las personas |
+| GET | `/personas/{id}` | una persona |
+| POST | `/personas` | crea una persona (409 si el id ya existe) |
+| PUT | `/personas/{id}` | cambia nombre y/o edad |
+| DELETE | `/personas/{id}` | elimina una persona |
+| GET | `/personas/{id}/libros` | libros de una persona |
+| GET | `/personas/{id}/libros/{numero}` | un libro (empieza en 1) |
+| POST | `/personas/{id}/libros` | presta un libro a la persona |
+| PUT | `/personas/{id}/libros/{numero}/devolver` | marca el libro como devuelto |
+| GET | `/dividir?a=10&b=2` | divide (400 si `b` es 0) |
+| GET | `/hola/{nombre}/{edad}` | dice si es mayor o menor de edad |
+| GET | `/cuadrado/{lado}` | área de un cuadrado |
 
-```` PYTHON
-from pydantic  from BaseModel
+Si algo no existe, la API responde **404**; si los datos están mal (por ejemplo, edad negativa), responde **422**.
+
+### Ejemplo para crear una persona (POST `/personas`)
+```json
+{
+  "id": "3",
+  "nombre": "sergio",
+  "edad": 20,
+  "libros": [
+    { "nombre": "Cien años de soledad", "fecha": "18/11/2026" }
+  ]
+}
+```
+
+## Primera ruta (ejemplo básico)
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
 
 @app.get("/")
 def hello_world_check():
-    return{
-        "titulo":"biblioteca STEAM",
-        "ver":"v0.0.1"
-    }
-....
+    return {"titulo": "biblioteca STEAM", "ver": "v0.0.1"}
+```
+
+> Los datos se guardan en memoria: al reiniciar el servidor vuelven a quedar las dos personas de ejemplo.
